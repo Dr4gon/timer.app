@@ -2,7 +2,7 @@
 
 A simple timer for pauses in online meetings, exercises in online workhops, and timeboxing in SCRUM events.
 
-P.S.: I don't know the initial creator.
+P.S.: I don't know the initial creator. Thank you, mysterious man/woman/alien!
 
 P.P.S.: However I want to share this with the world and I'm responsible for any further development.
 
