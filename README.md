@@ -26,7 +26,7 @@ Place a file named `Alarm.mp3` in the same folder of the HTML and it will be pla
 
 ## Why is this all in one file and spaghetti code?
 
-The reason is simple: **convenience**. The timer is designed to be used by anyone regardless of their tech experience. Plus as few dependencies as possible, so pure HTML and vanilla CSS.
+The reason is simple: **convenience**. The timer is designed to be used by anyone regardless of their tech experience. Plus as few dependencies as possible, so pure HTML with JS magic and vanilla CSS.
 
 ## Contributions
 
