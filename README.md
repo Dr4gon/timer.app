@@ -6,6 +6,10 @@ P.S.: I don't know the initial creator.
 
 P.P.S.: However I want to share this with the world and I'm responsible for any further development.
 
+## Demo
+
+![A visual stunning beautiful majestic demo](demo.gif)
+
 ## Why should you use this?
 
 You can do whatever you want. The idea is that this timer
