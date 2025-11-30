@@ -1,0 +1,564 @@
+<html
+  xmlns:mso="urn:schemas-microsoft-com:office:office"
+  xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"
+>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+
+    <style>
+      body,
+      html {
+        padding: 0;
+        margin: 0;
+        user-select: none;
+        -webkit-user-select: none;
+        font-family: Helvetica, sans-serif;
+        text-align: center;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        -webkit-tap-highlight-color: transparent;
+        height: 100%;
+      }
+
+      body {
+        -webkit-transition: background 0.5s ease-out;
+        transition: background 0.5s ease-out;
+      }
+
+      body:before {
+        content: "";
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 10px;
+        width: 100%;
+        z-index: 100;
+        background: linear-gradient(
+          to right,
+          #0077b4 0%,
+          #0077b4 16.677777777%,
+          #0077b4 16.677777778%,
+          #0077b4 33.355555554%,
+          #0077b4 33.355555555%,
+          #0077b4 50.033333331%,
+          #edc726 50.033333332%,
+          #edc726 66.711111108%,
+          #edc726 66.711111109%,
+          #edc726 83.388888885%,
+          #edc726 83.388888886%,
+          #edc726 100%
+        );
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00af88', endColorstr='#7db9e8',GradientType=1 );
+      }
+
+      #clock {
+        height: 100%;
+        height: -webkit-calc(100% - 110px);
+        height: -moz-calc(100% - 110px);
+        height: calc(100% - 110px);
+        position: relative;
+        top: 20px;
+      }
+
+      .digit {
+        font-size: 7px;
+        color: #0077b4 !important;
+      }
+
+      .off {
+        pointer-events: none;
+      }
+
+      #startstop {
+        display: block;
+        position: absolute;
+        bottom: 0px;
+        width: 800px;
+        left: 0px;
+        right: 0px;
+        bottom: 5px;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 10px;
+        height: 10%;
+        background: #0077b4 !important;
+        border-radius: 50px;
+        color: white;
+        line-height: 10vh;
+        font-weight: bold;
+        border: none;
+        outline: none;
+        font-size: 30px;
+        cursor: pointer;
+
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      #startstop.go {
+        background: #00af88;
+      }
+      #startstop.stop {
+        background: #e3223d;
+      }
+
+      .alarming {
+        -webkit-animation: alarmAnimation 0.5s infinite alternate ease-in-out;
+        -moz-animation: alarmAnimation 0.5s infinite alternate ease-in-out;
+        -o-animation: alarmAnimation 0.5s infinite alternate ease-in-out;
+        animation: alarmAnimation 0.5s infinite alternate ease-in-out;
+      }
+
+      @-webkit-keyframes alarmAnimation {
+        from {
+          background: #fff;
+        }
+        to {
+          background: #e3223d;
+        }
+      }
+      @-moz-keyframes alarmAnimation {
+        from {
+          background: #fff;
+        }
+        to {
+          background: #e3223d;
+        }
+      }
+      @-o-keyframes alarmAnimation {
+        from {
+          background: #fff;
+        }
+        to {
+          background: #e3223d;
+        }
+      }
+
+      #audioalarm {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      version="1.1"
+      id="clock"
+      viewBox="0 0 100 130"
+      data-time="868"
+    >
+      <rect x="0" y="10" width="100" height="100" fill="#d7e1eb"></rect>
+      <rect x="2.5" y="12.5" width="95" height="95" fill="#d7e1eb"></rect>
+
+      <text
+        x="50"
+        y="5"
+        id="titleh1"
+        text-anchor="middle"
+        alignment-baseline="middle"
+        font-size="5"
+        fill="#edc726"
+      >
+        SCRUM Timer
+      </text>
+
+      <text
+        x="50"
+        y="20"
+        class="digit"
+        data-time="60"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        0
+      </text>
+      <text
+        x="30"
+        y="25.359"
+        class="digit"
+        data-time="5"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        5
+      </text>
+      <text
+        x="15.359"
+        y="40"
+        class="digit"
+        data-time="10"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        10
+      </text>
+      <text
+        x="10"
+        y="60"
+        class="digit"
+        data-time="15"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        15
+      </text>
+      <text
+        x="15.359"
+        y="80"
+        class="digit"
+        data-time="20"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        20
+      </text>
+      <text
+        x="30"
+        y="94.641"
+        class="digit"
+        data-time="25"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        25
+      </text>
+      <text
+        x="50"
+        y="100"
+        class="digit"
+        data-time="30"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        30
+      </text>
+      <text
+        x="70"
+        y="94.641"
+        class="digit"
+        data-time="35"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        35
+      </text>
+      <text
+        x="84.641"
+        y="80"
+        class="digit"
+        data-time="40"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        40
+      </text>
+      <text
+        x="90"
+        y="60"
+        class="digit"
+        data-time="45"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        45
+      </text>
+      <text
+        x="84.641"
+        y="40"
+        class="digit"
+        data-time="50"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        50
+      </text>
+      <text
+        x="70"
+        y="25.359"
+        class="digit"
+        data-time="55"
+        text-anchor="middle"
+        alignment-baseline="middle"
+      >
+        55
+      </text>
+
+      <path
+        id="path"
+        fill="#edc726"
+        d="M 50 60 v -35 A 35 35 1 0 0 15.054756481091289 58.0447592615064 z"
+      ></path>
+      <circle id="centerpoint" cx="50" cy="60" r="2" fill="#000000"></circle>
+      <rect
+        x="0"
+        y="10"
+        width="50"
+        height="100"
+        fill="rgba(0,0,0,.05)"
+        class="off"
+      ></rect>
+
+      <text
+        id="display"
+        x="50"
+        y="120"
+        text-anchor="middle"
+        alignment-baseline="middle"
+        font-size="10"
+        fill="#edc726"
+      >
+        00:14:27
+      </text>
+    </svg>
+
+    <button id="startstop" class="go">Go!</button>
+
+    <script>
+      document.addEventListener("touchmove", function (e) {
+        e.preventDefault();
+      });
+
+      var clock = document.querySelector("#clock"),
+        svgpath = document.querySelector("#path"),
+        display = document.querySelector("#display"),
+        startStop = document.querySelector("#startStop"),
+        alarm = document.querySelector("#audioalarm"),
+        centerpoint = document.querySelector("#centerpoint"),
+        tickInterval = null,
+        startTime = 0,
+        startValue = 0;
+
+      start_event = function (e) {
+        this._isPressed = true;
+
+        stopTimer();
+
+        var bounds = centerpoint.getBoundingClientRect();
+
+        var cx = bounds.left + bounds.width / 2;
+        var cy = bounds.top + 45 + bounds.height / 2;
+
+        this._cx = cx;
+        this._cy = cy;
+
+        var dx = 0,
+          dy = 0;
+        if (e.type == "touchstart") {
+          dx = e.targetTouches[0].pageX - cx;
+          dy = e.targetTouches[0].pageY + 45 - cy;
+        } else {
+          dx = e.pageX - cx;
+          dy = e.pageY + 45 - cy;
+        }
+
+        var a = (Math.atan2(dy, dx) * 180) / Math.PI;
+        a += 90;
+        a = a > 0 ? a - 360 : a;
+        var s = a * -10;
+        renderClock(s);
+      };
+
+      clock.addEventListener("touchstart", start_event);
+      clock.addEventListener("mousedown", start_event);
+
+      move_event = function (e) {
+        e.preventDefault();
+        if (!this._isPressed) {
+          return;
+        }
+
+        var dx = 0,
+          dy = 0;
+        if (e.type == "touchmove") {
+          dx = e.targetTouches[0].pageX - this._cx;
+          dy = e.targetTouches[0].pageY + 45 - this._cy;
+        } else {
+          dx = e.pageX - this._cx;
+          dy = e.pageY + 45 - this._cy;
+        }
+
+        var a = (Math.atan2(dy, dx) * 180) / Math.PI;
+        a += 90;
+        a = a > 0 ? a - 360 : a;
+        var s = a * -10;
+
+        renderClock(s);
+      };
+
+      clock.addEventListener("touchmove", move_event);
+      clock.addEventListener("mousemove", move_event);
+
+      end_event = function (e) {
+        this._isPressed = false;
+        if (startStop.getAttribute("class").match("stop")) {
+          startValue = clock.getAttribute("data-time");
+          startTime = new Date().getTime();
+          startTimer();
+        }
+      };
+
+      clock.addEventListener("touchend", end_event);
+      clock.addEventListener("mouseup", end_event);
+
+      digit_event = function (e) {
+        e.stopPropagation();
+        var t = this.getAttribute("data-time");
+        renderClock(t * 60);
+      };
+
+      var digits = document.querySelectorAll(".digit");
+      for (i = 0; i < digits.length; i++) {
+        digits[i].addEventListener("mousedown", digit_event);
+        digits[i].addEventListener("touchstart", digit_event);
+      }
+
+      startStopEvent = function () {
+        console.log("#########sdsdsd");
+        var classNow = this.getAttribute("class");
+        if (classNow.match("go")) {
+          this.setAttribute("class", classNow.replace(/go/, "stop"));
+          this.textContent = "Stop!";
+          startValue = clock.getAttribute("data-time");
+          if (startValue <= 1) {
+            renderClock(60 * 15);
+          }
+          startTime = new Date().getTime();
+          localStorage.setItem(
+            "timerState",
+            JSON.stringify({ startValue: startValue, startTime: startTime })
+          );
+          startTimer();
+        } else if (classNow.match("stop")) {
+          this.setAttribute("class", classNow.replace(/stop/, "go"));
+          this.textContent = "Go!";
+          localStorage.removeItem("timerState");
+          document.body.removeAttribute("class");
+          stopTimer();
+        }
+      };
+
+      //startStop.addEventListener("touchstart",startStopEvent);
+      startStop.addEventListener("mousedown", startStopEvent);
+
+      startTimer = function () {
+        if (tickInterval != null) {
+          window.clearInterval(tickInterval);
+        }
+        startTime = new Date().getTime();
+        startValue = clock.getAttribute("data-time");
+        tickInterval = window.setInterval(tick, 1000);
+      };
+
+      stopTimer = function () {
+        if (tickInterval != null) {
+          window.clearInterval(tickInterval);
+          tickInterval = null;
+        }
+      };
+
+      renderClock = function (seconds) {
+        var txtsec = seconds;
+        seconds = Math.max(seconds, 0);
+
+        clock.setAttribute("data-time", Math.round(seconds));
+
+        var deg = seconds / 10;
+        deg = Math.max(0, deg);
+        deg = Math.min(360, deg);
+        deg = 360 - deg;
+
+        var l = 35;
+
+        var r = (deg * Math.PI) / 180,
+          x = 50.0001 + Math.sin(r) * l,
+          y = 60 + Math.cos(r) * -l,
+          mid = deg > 180 ? 0 : 1,
+          anim =
+            "M 50 60 v -" +
+            l +
+            " A " +
+            l +
+            " " +
+            l +
+            " 1 " +
+            mid +
+            " 0 " +
+            x +
+            " " +
+            y +
+            " z";
+
+        svgpath.setAttribute("d", anim);
+
+        var min = Math.floor(txtsec / 60);
+        var sec = Math.floor(txtsec - min * 60);
+        var txt = "00:" + ("0" + min).substr(-2) + ":" + ("0" + sec).substr(-2);
+
+        display.textContent = txt;
+      };
+
+      tick = function () {
+        if (clock._isPressed) {
+          return;
+        }
+        var diff = new Date().getTime() - startTime;
+        diff = Math.floor(diff / 1000);
+        var val = startValue - diff;
+
+        renderClock(val);
+
+        if (val <= 0) {
+          fireAlarm();
+        }
+      };
+
+      fireAlarm = function () {
+        document.body.setAttribute("class", "alarming");
+
+        try {
+          var audio = new Audio("Alarm.mp3");
+          audio.play();
+          //	alarm.play();
+        } catch (e) {
+          console.log("Error while playing alarm", e);
+        }
+        startStop.setAttribute("class", "go");
+        startStop.textContent = "Go!";
+        localStorage.removeItem("timerState");
+        setTimeout(function () {
+          document.body.removeAttribute("class");
+        }, 5000);
+        stopTimer();
+      };
+
+      var restore = localStorage.getItem("timerState");
+
+      if (restore) {
+        try {
+          var r = JSON.parse(restore);
+          startValue = parseFloat(r.startValue);
+          startTime = parseInt(r.startTime);
+
+          var diff = new Date().getTime() - startTime;
+          diff = Math.floor(diff / 1000);
+          var val = startValue - diff;
+
+          renderClock(val);
+
+          startStop.setAttribute("class", "stop");
+          startStop.textContent = "Stop!";
+          startTimer();
+        } catch (e) {
+          stopTimer();
+          renderClock(2700);
+        }
+      } else {
+        renderClock(2700);
+      }
+    </script>
+  </body>
+</html>
