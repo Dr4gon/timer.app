@@ -151,22 +151,7 @@
       <rect x="0" y="10" width="100" height="100" fill="#d7e1eb"></rect>
       <rect x="2.5" y="12.5" width="95" height="95" fill="#d7e1eb"></rect>
 
-      <foreignObject x="2" y="1" width="9" height="8">
-        <input
-          type="color"
-          id="colorPrimary"
-          value="#0077b4"
-          title="Hauptfarbe 1"
-          style="
-            width: 100%;
-            height: 100%;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            border-radius: 3px;
-          "
-        />
-      </foreignObject>
+      <circle id="swatchPrimary" cx="6.5" cy="5" r="3.5" fill="#0077b4" style="cursor:pointer" />
 
       <text
         x="50"
@@ -181,22 +166,7 @@
         SCRUM Timer
       </text>
 
-      <foreignObject x="89" y="1" width="9" height="8">
-        <input
-          type="color"
-          id="colorAccent"
-          value="#edc726"
-          title="Hauptfarbe 2"
-          style="
-            width: 100%;
-            height: 100%;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            border-radius: 3px;
-          "
-        />
-      </foreignObject>
+      <circle id="swatchAccent" cx="93.5" cy="5" r="3.5" fill="#edc726" style="cursor:pointer" />
 
       <text
         x="50"
@@ -718,54 +688,50 @@
         var styleTag = document.createElement("style");
         document.head.appendChild(styleTag);
 
+        // Hidden color inputs
+        function makeHiddenInput(id, value) {
+          var el = document.createElement("input");
+          el.type = "color";
+          el.id = id;
+          el.value = value;
+          Object.assign(el.style, { position: "fixed", opacity: "0", width: "0", height: "0", pointerEvents: "none" });
+          document.body.appendChild(el);
+          return el;
+        }
+        var inputPrimary = makeHiddenInput("colorPrimary", "#0077b4");
+        var inputAccent  = makeHiddenInput("colorAccent",  "#edc726");
+
         function applyColors(c1, c2) {
-          // SVG fills
+          document.querySelector("#swatchPrimary").setAttribute("fill", c1);
+          document.querySelector("#swatchAccent").setAttribute("fill", c2);
           document.querySelector("#path").setAttribute("fill", c2);
           document.querySelector("#titleh1").setAttribute("fill", c2);
           document.querySelector("#display").setAttribute("fill", c2);
-          document.querySelectorAll(".digit").forEach(function (el) {
-            el.style.color = c1;
-          });
-          // CSS overrides for pseudo-element gradient and button
+          document.querySelectorAll(".digit").forEach(function (el) { el.style.color = c1; });
           styleTag.textContent =
-            "body:before { background: linear-gradient(to right, " +
-            c1 +
-            " 0%, " +
-            c1 +
-            " 50%, " +
-            c2 +
-            " 50%, " +
-            c2 +
-            " 100%) !important; }" +
-            "#startstop { background: " +
-            c1 +
-            " !important; }";
+            "body:before { background: linear-gradient(to right, " + c1 + " 50%, " + c2 + " 50%) !important; }" +
+            "#startstop { background: " + c1 + " !important; }";
         }
 
-        // Prevent color inputs from triggering clock drag
-        ["colorPrimary", "colorAccent"].forEach(function (id) {
-          var el = document.getElementById(id);
-          el.addEventListener("mousedown", function (e) {
-            e.stopPropagation();
+        function openPickerAt(input, swatch) {
+          var rect = swatch.getBoundingClientRect();
+          Object.assign(input.style, {
+            left: rect.left + rect.width / 2 + "px",
+            top:  rect.top  + rect.height / 2 + "px",
+            width: "1px",
+            height: "1px",
           });
-        });
+          input.click();
+        }
 
-        document
-          .getElementById("colorPrimary")
-          .addEventListener("input", function () {
-            applyColors(
-              this.value,
-              document.getElementById("colorAccent").value
-            );
-          });
-        document
-          .getElementById("colorAccent")
-          .addEventListener("input", function () {
-            applyColors(
-              document.getElementById("colorPrimary").value,
-              this.value
-            );
-          });
+        // Circles open the hidden color picker
+        document.getElementById("swatchPrimary").addEventListener("mousedown", function (e) { e.stopPropagation(); });
+        document.getElementById("swatchPrimary").addEventListener("click",     function (e) { e.stopPropagation(); openPickerAt(inputPrimary, this); });
+        document.getElementById("swatchAccent").addEventListener("mousedown",  function (e) { e.stopPropagation(); });
+        document.getElementById("swatchAccent").addEventListener("click",      function (e) { e.stopPropagation(); openPickerAt(inputAccent,  this); });
+
+        inputPrimary.addEventListener("input", function () { applyColors(this.value, inputAccent.value); });
+        inputAccent.addEventListener("input",  function () { applyColors(inputPrimary.value, this.value); });
       })();
       // ------------------ End Color Pickers ------------------
 
