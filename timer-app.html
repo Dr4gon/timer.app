@@ -21,6 +21,11 @@
       }
 
       body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 10px;
+        box-sizing: border-box;
         -webkit-transition: background 0.5s ease-out;
         transition: background 0.5s ease-out;
       }
@@ -52,12 +57,9 @@
       }
 
       #clock {
-        height: 100%;
-        height: -webkit-calc(100% - 110px);
-        height: -moz-calc(100% - 110px);
-        height: calc(100% - 110px);
-        position: relative;
-        top: 20px;
+        flex: 1;
+        min-height: 0;
+        width: 100%;
       }
 
       .digit {
@@ -70,30 +72,20 @@
       }
 
       #startstop {
-        display: block;
-        position: absolute;
-        bottom: 0px;
-        width: 800px;
-        left: 0px;
-        right: 0px;
-        bottom: 5px;
-        margin: 0;
-        padding: 0;
-        margin-bottom: 10px;
-        height: 10%;
+        flex-shrink: 0;
+        width: min(800px, calc((100vh - 110px) * 0.77));
+        height: 8vh;
+        margin: 8px auto 12px;
         background: #0077b4 !important;
         border-radius: 50px;
         color: white;
-        line-height: 10vh;
+        line-height: 8vh;
         font-weight: bold;
         border: none;
         outline: none;
-        font-size: 30px;
+        font-size: clamp(14px, 2.5vh, 26px);
+        letter-spacing: 0.1em;
         cursor: pointer;
-
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
       }
 
       #startstop.go {
@@ -332,7 +324,7 @@
       </text>
     </svg>
 
-    <button id="startstop" class="go">Go!</button>
+    <button id="startstop" class="go">Tick!</button>
 
     <script>
       document.addEventListener("touchmove", function (e) {
@@ -438,7 +430,7 @@
         var classNow = this.getAttribute("class");
         if (classNow.match("go")) {
           this.setAttribute("class", classNow.replace(/go/, "stop"));
-          this.textContent = "Stop!";
+          this.textContent = "Tock!";
           startValue = clock.getAttribute("data-time");
           if (startValue <= 1) {
             renderClock(60 * 15);
@@ -451,7 +443,7 @@
           startTimer();
         } else if (classNow.match("stop")) {
           this.setAttribute("class", classNow.replace(/stop/, "go"));
-          this.textContent = "Go!";
+          this.textContent = "Tick!";
           localStorage.removeItem("timerState");
           document.body.removeAttribute("class");
           stopTimer();
@@ -544,7 +536,7 @@
           console.log("Error while playing alarm", e);
         }
         startStop.setAttribute("class", "go");
-        startStop.textContent = "Go!";
+        startStop.textContent = "Tick!";
         localStorage.removeItem("timerState");
         setTimeout(function () {
           document.body.removeAttribute("class");
