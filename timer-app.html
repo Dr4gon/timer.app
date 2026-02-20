@@ -308,6 +308,7 @@
         alignment-baseline="middle"
         font-size="10"
         fill="#edc726"
+        style="cursor: pointer"
       >
         00:14:27
       </text>
@@ -597,6 +598,86 @@
       })();
 
       // ------------------ End of Editing the title ------------------
+
+      // -------------- Start of Editing the timer time ---------------
+      (function () {
+        var displayEl = document.querySelector("#display");
+
+        // Create a temporary input field to receive the new timestamp
+        var input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "MM:SS";
+        Object.assign(input.style, {
+          position: "fixed",
+          display: "none",
+          zIndex: "1000",
+          background: "transparent",
+          border: "none",
+          borderBottom: "2px solid #edc726",
+          color: "#edc726",
+          fontFamily: "Helvetica, sans-serif",
+          fontWeight: "bold",
+          textAlign: "center",
+          outline: "none",
+          padding: "0",
+          margin: "0",
+          boxSizing: "border-box",
+        });
+        document.body.appendChild(input);
+
+        // Prevent the default behaviour
+        displayEl.addEventListener("mousedown", function (e) {
+          e.stopPropagation();
+        });
+
+        // Allow click to trigger input change
+        displayEl.addEventListener("click", function (e) {
+          e.stopPropagation();
+          stopTimer();
+          var rect = displayEl.getBoundingClientRect();
+          Object.assign(input.style, {
+            display: "block",
+            left: rect.left + "px",
+            top: rect.top + "px",
+            width: rect.width + "px",
+            height: rect.height + "px",
+            fontSize: rect.height * 0.75 + "px",
+          });
+          input.value = displayEl.textContent.trim();
+          displayEl.style.visibility = "hidden";
+          input.focus();
+          input.select();
+        });
+
+        // Validate input and convert to seconds
+        function parseTime(str) {
+          var parts = str.trim().split(":").map(Number);
+          if (parts.some(isNaN)) return null;
+          if (parts.length === 2) return parts[0] * 60 + parts[1];
+          if (parts.length === 3)
+            return parts[0] * 3600 + parts[1] * 60 + parts[2];
+          return null;
+        }
+
+        // Save changes
+        function commit() {
+          var seconds = parseTime(input.value);
+          input.style.display = "none";
+          displayEl.style.visibility = "visible";
+          if (seconds !== null && seconds >= 0) renderClock(seconds);
+        }
+
+        // Consider enter and escape behaviour for the input field
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") input.blur();
+          if (e.key === "Escape") {
+            input.style.display = "none";
+            displayEl.style.visibility = "visible";
+          }
+        });
+        input.addEventListener("blur", commit);
+      })();
+      // --------------- End of Editing the timer time ---------------
 
       var restore = localStorage.getItem("timerState");
 
