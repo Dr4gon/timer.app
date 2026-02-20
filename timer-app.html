@@ -151,7 +151,14 @@
       <rect x="0" y="10" width="100" height="100" fill="#d7e1eb"></rect>
       <rect x="2.5" y="12.5" width="95" height="95" fill="#d7e1eb"></rect>
 
-      <circle id="swatchPrimary" cx="6.5" cy="5" r="3.5" fill="#0077b4" style="cursor:pointer" />
+      <circle
+        id="swatchPrimary"
+        cx="6.5"
+        cy="5"
+        r="3.5"
+        fill="#0077b4"
+        style="cursor: pointer"
+      />
 
       <text
         x="50"
@@ -166,7 +173,14 @@
         SCRUM Timer
       </text>
 
-      <circle id="swatchAccent" cx="93.5" cy="5" r="3.5" fill="#edc726" style="cursor:pointer" />
+      <circle
+        id="swatchAccent"
+        cx="93.5"
+        cy="5"
+        r="3.5"
+        fill="#edc726"
+        style="cursor: pointer"
+      />
 
       <text
         x="50"
@@ -694,12 +708,18 @@
           el.type = "color";
           el.id = id;
           el.value = value;
-          Object.assign(el.style, { position: "fixed", opacity: "0", width: "0", height: "0", pointerEvents: "none" });
+          Object.assign(el.style, {
+            position: "fixed",
+            opacity: "0",
+            width: "0",
+            height: "0",
+            pointerEvents: "none",
+          });
           document.body.appendChild(el);
           return el;
         }
         var inputPrimary = makeHiddenInput("colorPrimary", "#0077b4");
-        var inputAccent  = makeHiddenInput("colorAccent",  "#edc726");
+        var inputAccent = makeHiddenInput("colorAccent", "#edc726");
 
         function applyColors(c1, c2) {
           document.querySelector("#swatchPrimary").setAttribute("fill", c1);
@@ -707,31 +727,63 @@
           document.querySelector("#path").setAttribute("fill", c2);
           document.querySelector("#titleh1").setAttribute("fill", c2);
           document.querySelector("#display").setAttribute("fill", c2);
-          document.querySelectorAll(".digit").forEach(function (el) { el.style.color = c1; });
+          document.querySelectorAll(".digit").forEach(function (el) {
+            el.style.color = c1;
+          });
           styleTag.textContent =
-            "body:before { background: linear-gradient(to right, " + c1 + " 50%, " + c2 + " 50%) !important; }" +
-            "#startstop { background: " + c1 + " !important; }";
+            "body:before { background: linear-gradient(to right, " +
+            c1 +
+            " 50%, " +
+            c2 +
+            " 50%) !important; }" +
+            "#startstop { background: " +
+            c1 +
+            " !important; }";
         }
 
-        function openPickerAt(input, swatch) {
+        function positionInput(input, swatch) {
           var rect = swatch.getBoundingClientRect();
           Object.assign(input.style, {
             left: rect.left + rect.width / 2 + "px",
-            top:  rect.top  + rect.height / 2 + "px",
+            top: rect.top + rect.height / 2 + "px",
             width: "1px",
             height: "1px",
           });
-          input.click();
         }
 
-        // Circles open the hidden color picker
-        document.getElementById("swatchPrimary").addEventListener("mousedown", function (e) { e.stopPropagation(); });
-        document.getElementById("swatchPrimary").addEventListener("click",     function (e) { e.stopPropagation(); openPickerAt(inputPrimary, this); });
-        document.getElementById("swatchAccent").addEventListener("mousedown",  function (e) { e.stopPropagation(); });
-        document.getElementById("swatchAccent").addEventListener("click",      function (e) { e.stopPropagation(); openPickerAt(inputAccent,  this); });
+        var swatchPrimary = document.getElementById("swatchPrimary");
+        var swatchAccent = document.getElementById("swatchAccent");
 
-        inputPrimary.addEventListener("input", function () { applyColors(this.value, inputAccent.value); });
-        inputAccent.addEventListener("input",  function () { applyColors(inputPrimary.value, this.value); });
+        // Pre-position on load and on resize so first click is already correct
+        function syncPositions() {
+          positionInput(inputPrimary, swatchPrimary);
+          positionInput(inputAccent, swatchAccent);
+        }
+        syncPositions();
+        window.addEventListener("resize", syncPositions);
+
+        // Circles open the hidden color picker
+        swatchPrimary.addEventListener("mousedown", function (e) {
+          e.stopPropagation();
+        });
+        swatchPrimary.addEventListener("click", function (e) {
+          e.stopPropagation();
+          inputPrimary.click();
+        });
+        swatchAccent.addEventListener("mousedown", function (e) {
+          e.stopPropagation();
+        });
+        swatchAccent.addEventListener("click", function (e) {
+          e.stopPropagation();
+          inputAccent.click();
+        });
+
+        inputPrimary.addEventListener("input", function () {
+          applyColors(this.value, inputAccent.value);
+        });
+        inputAccent.addEventListener("input", function () {
+          applyColors(inputPrimary.value, this.value);
+        });
       })();
       // ------------------ End Color Pickers ------------------
 
