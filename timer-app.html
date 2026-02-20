@@ -162,6 +162,7 @@
         alignment-baseline="middle"
         font-size="5"
         fill="#edc726"
+        style="cursor: pointer"
       >
         SCRUM Timer
       </text>
@@ -534,6 +535,71 @@
         }, 5000);
         stopTimer();
       };
+
+      // ------------------ Start of Editing the title ------------------
+      (function () {
+        var titleEl = document.querySelector("#titleh1");
+
+        // Create a temporary input field to receive the new title
+        var input = document.createElement("input");
+        input.type = "text";
+        Object.assign(input.style, {
+          position: "fixed",
+          display: "none",
+          zIndex: "1000",
+          background: "transparent",
+          border: "none",
+          borderBottom: "2px solid #edc726",
+          color: "#edc726",
+          fontFamily: "Helvetica, sans-serif",
+          fontWeight: "bold",
+          textAlign: "center",
+          outline: "none",
+          padding: "0",
+          margin: "0",
+          boxSizing: "border-box",
+        });
+        document.body.appendChild(input);
+
+        // Prevent the default behaviour
+        titleEl.addEventListener("mousedown", function (e) {
+          e.stopPropagation();
+        });
+
+        // When the title is clicked, show the input field and hide the title
+        titleEl.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var rect = titleEl.getBoundingClientRect();
+          Object.assign(input.style, {
+            display: "block",
+            left: rect.left + "px",
+            top: rect.top + "px",
+            width: rect.width + "px",
+            height: rect.height + "px",
+            fontSize: rect.height * 0.75 + "px",
+          });
+          input.value = titleEl.textContent.trim();
+          titleEl.style.visibility = "hidden";
+          input.focus();
+          input.select();
+        });
+
+        // Accept changes and restore original state
+        function commit() {
+          var newTitle = input.value.trim();
+          input.style.display = "none";
+          titleEl.style.visibility = "visible";
+          if (newTitle) titleEl.textContent = newTitle;
+        }
+
+        // Make sure Enter is accounted for as final input
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") input.blur();
+        });
+        input.addEventListener("blur", commit);
+      })();
+
+      // ------------------ End of Editing the title ------------------
 
       var restore = localStorage.getItem("timerState");
 
