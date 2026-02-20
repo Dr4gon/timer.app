@@ -83,3 +83,5 @@ Thumbs.db
 ######################
 .env
 *.*.crdownload
+*.mp3
+*.wav
