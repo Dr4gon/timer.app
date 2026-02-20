@@ -151,6 +151,23 @@
       <rect x="0" y="10" width="100" height="100" fill="#d7e1eb"></rect>
       <rect x="2.5" y="12.5" width="95" height="95" fill="#d7e1eb"></rect>
 
+      <foreignObject x="2" y="1" width="9" height="8">
+        <input
+          type="color"
+          id="colorPrimary"
+          value="#0077b4"
+          title="Hauptfarbe 1"
+          style="
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 3px;
+          "
+        />
+      </foreignObject>
+
       <text
         x="50"
         y="5"
@@ -163,6 +180,23 @@
       >
         SCRUM Timer
       </text>
+
+      <foreignObject x="89" y="1" width="9" height="8">
+        <input
+          type="color"
+          id="colorAccent"
+          value="#edc726"
+          title="Hauptfarbe 2"
+          style="
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            border-radius: 3px;
+          "
+        />
+      </foreignObject>
 
       <text
         x="50"
@@ -678,6 +712,62 @@
         input.addEventListener("blur", commit);
       })();
       // --------------- End of Editing the timer time ---------------
+
+      // ------------------ Color Pickers ------------------
+      (function () {
+        var styleTag = document.createElement("style");
+        document.head.appendChild(styleTag);
+
+        function applyColors(c1, c2) {
+          // SVG fills
+          document.querySelector("#path").setAttribute("fill", c2);
+          document.querySelector("#titleh1").setAttribute("fill", c2);
+          document.querySelector("#display").setAttribute("fill", c2);
+          document.querySelectorAll(".digit").forEach(function (el) {
+            el.style.color = c1;
+          });
+          // CSS overrides for pseudo-element gradient and button
+          styleTag.textContent =
+            "body:before { background: linear-gradient(to right, " +
+            c1 +
+            " 0%, " +
+            c1 +
+            " 50%, " +
+            c2 +
+            " 50%, " +
+            c2 +
+            " 100%) !important; }" +
+            "#startstop { background: " +
+            c1 +
+            " !important; }";
+        }
+
+        // Prevent color inputs from triggering clock drag
+        ["colorPrimary", "colorAccent"].forEach(function (id) {
+          var el = document.getElementById(id);
+          el.addEventListener("mousedown", function (e) {
+            e.stopPropagation();
+          });
+        });
+
+        document
+          .getElementById("colorPrimary")
+          .addEventListener("input", function () {
+            applyColors(
+              this.value,
+              document.getElementById("colorAccent").value
+            );
+          });
+        document
+          .getElementById("colorAccent")
+          .addEventListener("input", function () {
+            applyColors(
+              document.getElementById("colorPrimary").value,
+              this.value
+            );
+          });
+      })();
+      // ------------------ End Color Pickers ------------------
 
       var restore = localStorage.getItem("timerState");
 
