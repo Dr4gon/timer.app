@@ -43,7 +43,11 @@
         height: 10px;
         width: 100%;
         z-index: 100;
-        background: linear-gradient(to right, var(--c-primary) 50%, var(--c-accent) 50%);
+        background: linear-gradient(
+          to right,
+          var(--c-primary) 50%,
+          var(--c-accent) 50%
+        );
       }
 
       #clock {
@@ -330,8 +334,8 @@
 
     <script>
       var DEFAULT_PRIMARY = "#0077b4";
-      var DEFAULT_ACCENT  = "#edc726";
-      var DEFAULT_TITLE   = "SCRUM Timer";
+      var DEFAULT_ACCENT = "#edc726";
+      var DEFAULT_TITLE = "SCRUM Timer";
 
       document.querySelector("#titleh1").textContent = DEFAULT_TITLE;
 
@@ -699,11 +703,11 @@
           return el;
         }
         var inputPrimary = makeHiddenInput("colorPrimary", DEFAULT_PRIMARY);
-        var inputAccent  = makeHiddenInput("colorAccent",  DEFAULT_ACCENT);
+        var inputAccent = makeHiddenInput("colorAccent", DEFAULT_ACCENT);
 
         function applyColors(c1, c2) {
           document.documentElement.style.setProperty("--c-primary", c1);
-          document.documentElement.style.setProperty("--c-accent",  c2);
+          document.documentElement.style.setProperty("--c-accent", c2);
         }
 
         function positionInput(input, swatch) {
@@ -717,12 +721,12 @@
         }
 
         var swatchPrimary = document.getElementById("swatchPrimary");
-        var swatchAccent  = document.getElementById("swatchAccent");
+        var swatchAccent = document.getElementById("swatchAccent");
 
         // Pre-position on load and on resize so first click is already correct
         function syncPositions() {
           positionInput(inputPrimary, swatchPrimary);
-          positionInput(inputAccent,  swatchAccent);
+          positionInput(inputAccent, swatchAccent);
         }
         syncPositions();
         window.addEventListener("resize", syncPositions);
@@ -777,5 +781,167 @@
         renderClock(2700);
       }
     </script>
+
+    <!-- ============ EASTER EGG: BOMB MODE (Ctrl+B) ============= -->
+    <script>
+      (function () {
+        // Generate polygon points for a starburst shape
+        function burstPoints(cx, cy, rOuter, rInner, n) {
+          var pts = [];
+          for (var i = 0; i < n * 2; i++) {
+            var a = (i * Math.PI) / n - Math.PI / 2;
+            var r = i % 2 === 0 ? rOuter : rInner;
+            pts.push(
+              (cx + r * Math.cos(a)).toFixed(2) +
+                "," +
+                (cy + r * Math.sin(a)).toFixed(2)
+            );
+          }
+          return pts.join(" ");
+        }
+
+        var bombActive = false;
+        var svg = document.getElementById("clock");
+        var ns = "http://www.w3.org/2000/svg";
+
+        // --- Inject bomb mode CSS ---
+        var css = document.createElement("style");
+        css.textContent =
+          "body.bomb-mode { background: #0d0d1a !important; }" +
+          "body.bomb-mode::before { display: none; }" +
+          "body.bomb-mode #clock-bg-1," +
+          "body.bomb-mode #clock-bg-2," +
+          "body.bomb-mode .digit," +
+          "body.bomb-mode #path," +
+          "body.bomb-mode #centerpoint," +
+          "body.bomb-mode #clock-half { display: none; }" +
+          "body.bomb-mode #display { fill: #ff4444 !important; }" +
+          "body.bomb-mode #titleh1 { fill: #ff6666 !important; }" +
+          "body.bomb-mode #startstop {" +
+          "  background: #111 !important;" +
+          "  color: #ff4444;" +
+          "  border: 2px solid #ff4444;" +
+          "}" +
+          "body.bomb-mode #startstop.stop {" +
+          "  background: #cc0000 !important;" +
+          "  color: #fff;" +
+          "  border: 2px solid #ff6600;" +
+          "}" +
+          "#bomb-overlay { display: none; }" +
+          "body.bomb-mode #bomb-overlay { display: block; }" +
+          "body.bomb-mode.booming #bomb-overlay { opacity: 0; }" +
+          "#boom-flag {" +
+          "  display: none;" +
+          "  transform-box: fill-box;" +
+          "  transform-origin: 50% 50%;" +
+          "}" +
+          "body.bomb-mode.booming #boom-flag {" +
+          "  display: block;" +
+          "  animation: boomIn 0.6s cubic-bezier(.36,.07,.19,.97) both;" +
+          "}" +
+          "@keyframes boomIn {" +
+          "  0%   { opacity:0; transform:scale(0.05) rotate(-20deg); }" +
+          "  60%  { opacity:1; transform:scale(1.12) rotate(4deg); }" +
+          "  100% { opacity:1; transform:scale(1) rotate(0deg); }" +
+          "}" +
+          "@keyframes spark { from { opacity:1; } to { opacity:0.15; } }" +
+          ".fuse-spark { animation: spark 0.35s infinite alternate; }";
+        document.head.appendChild(css);
+
+        // --- Give existing background rects IDs so CSS can hide them ---
+        var rects = svg.querySelectorAll("rect");
+        if (rects[0] && !rects[0].id) rects[0].id = "clock-bg-1";
+        if (rects[1] && !rects[1].id) rects[1].id = "clock-bg-2";
+        if (rects[2] && !rects[2].id) rects[2].id = "clock-half";
+
+        // --- Build bomb SVG overlay ---
+        var bombG = document.createElementNS(ns, "g");
+        bombG.id = "bomb-overlay";
+        bombG.innerHTML =
+          // Dark background fills the clock area
+          '<rect x="0" y="10" width="100" height="100" fill="#0d0d1a"/>' +
+          // Drop shadow
+          '<ellipse cx="52" cy="101" rx="24" ry="4" fill="rgba(0,0,0,0.5)"/>' +
+          // Bomb body
+          '<circle cx="50" cy="72" r="27" fill="#0d0d0d"/>' +
+          // Highlight
+          '<ellipse cx="41" cy="62" rx="10" ry="7" fill="rgba(255,255,255,0.1)" transform="rotate(-30,41,62)"/>' +
+          // Fuse socket
+          '<rect x="46.5" y="44" width="7" height="5" rx="2" fill="#444"/>' +
+          // Fuse rope
+          '<path d="M50 44 C57 37,44 29,58 21" stroke="#c8a040" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+          // Spark glow (outer)
+          '<circle class="fuse-spark" cx="58" cy="21" r="5" fill="rgba(255,160,0,0.2)"/>' +
+          // Spark (inner)
+          '<circle class="fuse-spark" cx="58" cy="21" r="2.5" fill="#ffcc00"/>' +
+          // Spark rays
+          '<g class="fuse-spark">' +
+          '<line x1="58" y1="15" x2="58" y2="12" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>' +
+          '<line x1="63" y1="17" x2="66" y2="14" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>' +
+          '<line x1="63" y1="25" x2="66" y2="28" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>' +
+          '<line x1="53" y1="15" x2="50" y2="12" stroke="#ffdd00" stroke-width="1.3" stroke-linecap="round"/>' +
+          "</g>";
+
+        // --- Build BOOM flag ---
+        var boomG = document.createElementNS(ns, "g");
+        boomG.id = "boom-flag";
+        var outerPts = burstPoints(50, 57, 42, 22, 12);
+        var innerPts = burstPoints(50, 57, 35, 18, 12);
+        boomG.innerHTML =
+          // Outer gold starburst
+          '<polygon points="' +
+          outerPts +
+          '" fill="#FFD700"/>' +
+          // Inner orange-red starburst
+          '<polygon points="' +
+          innerPts +
+          '" fill="#FF4500"/>' +
+          // White center disc for text
+          '<circle cx="50" cy="57" r="15" fill="#FFF8E0"/>' +
+          // BOOM! text
+          '<text x="50" y="54" text-anchor="middle" alignment-baseline="middle"' +
+          ' font-size="11" font-weight="bold" font-family="Impact,Arial Black,sans-serif"' +
+          ' fill="#CC0000" stroke="#000" stroke-width="0.5">BOOM!</text>' +
+          // Decorative small stars scattered around the burst
+          '<polygon fill="#FFD700" points="16,20 17.5,25 22,23 18.5,27 20,32 16,29 12,32 13.5,27 10,23 14.5,25"/>' +
+          '<polygon fill="#FF4500" points="84,16 85.2,20.5 90,19 86.5,23 88,28 84,25.5 80,28 81.5,23 78,19 82.8,20.5"/>' +
+          '<circle cx="90" cy="78" r="3.5" fill="#FFD700"/>' +
+          '<circle cx="12" cy="80" r="2.5" fill="#FF4500"/>' +
+          '<circle cx="50" cy="100" r="2" fill="#FFD700"/>';
+
+        svg.appendChild(bombG);
+        svg.appendChild(boomG);
+
+        // --- Toggle helpers ---
+        function enterBomb() {
+          bombActive = true;
+          document.body.classList.add("bomb-mode");
+        }
+
+        function exitBomb() {
+          bombActive = false;
+          document.body.classList.remove("bomb-mode", "booming");
+        }
+
+        // --- Wrap fireAlarm so BOOM triggers in bomb mode ---
+        var origFireAlarm = window.fireAlarm;
+        window.fireAlarm = function () {
+          origFireAlarm.apply(this, arguments);
+          if (bombActive) {
+            // fireAlarm replaces body class; re-add bomb classes after
+            document.body.classList.add("bomb-mode", "booming");
+          }
+        };
+
+        // --- Ctrl+B activates / deactivates bomb mode ---
+        document.addEventListener("keydown", function (e) {
+          if (e.ctrlKey && e.key === "b") {
+            e.preventDefault();
+            bombActive ? exitBomb() : enterBomb();
+          }
+        });
+      })();
+    </script>
+    <!-- ==================== END EASTER EGG ==================== -->
   </body>
 </html>
