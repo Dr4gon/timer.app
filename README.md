@@ -42,12 +42,13 @@ Any kind of requests, bugs, and so on and so forth, [write a ticket](https://git
 - [x] Share initial timer version with the open-source world
 - [x] Write proper docu
 - [ ] Clean out code
-- [ ] Add color options
+- [x] Add color options
 - [ ] Add custom sound options
-- [ ] Add custom naming options
+- [x] Add custom naming options
 - [ ] Fry some super tasty noodles with duck
 - [ ] Play piano every once in a while
 - [ ] Make a random stranger laugh
+- [x] Add hidden Easter Egg (try CTRL + B)
 
 ### Credits
 
