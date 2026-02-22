@@ -7,6 +7,11 @@
     />
 
     <style>
+      :root {
+        --c-primary: #0077b4;
+        --c-accent: #edc726;
+      }
+
       body,
       html {
         padding: 0;
@@ -38,22 +43,7 @@
         height: 10px;
         width: 100%;
         z-index: 100;
-        background: linear-gradient(
-          to right,
-          #0077b4 0%,
-          #0077b4 16.677777777%,
-          #0077b4 16.677777778%,
-          #0077b4 33.355555554%,
-          #0077b4 33.355555555%,
-          #0077b4 50.033333331%,
-          #edc726 50.033333332%,
-          #edc726 66.711111108%,
-          #edc726 66.711111109%,
-          #edc726 83.388888885%,
-          #edc726 83.388888886%,
-          #edc726 100%
-        );
-        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00af88', endColorstr='#7db9e8',GradientType=1 );
+        background: linear-gradient(to right, var(--c-primary) 50%, var(--c-accent) 50%);
       }
 
       #clock {
@@ -64,7 +54,18 @@
 
       .digit {
         font-size: 7px;
-        color: #0077b4 !important;
+        color: var(--c-primary) !important;
+      }
+
+      #swatchPrimary {
+        fill: var(--c-primary);
+      }
+
+      #swatchAccent,
+      #path,
+      #titleh1,
+      #display {
+        fill: var(--c-accent);
       }
 
       .off {
@@ -76,7 +77,7 @@
         width: min(800px, calc((100vh - 110px) * 0.77));
         height: 8vh;
         margin: 8px auto 12px;
-        background: #0077b4 !important;
+        background: var(--c-primary) !important;
         border-radius: 50px;
         color: white;
         line-height: 8vh;
@@ -148,7 +149,6 @@
         cx="6.5"
         cy="5"
         r="3.5"
-        fill="#0077b4"
         style="cursor: pointer"
       />
 
@@ -159,18 +159,14 @@
         text-anchor="middle"
         alignment-baseline="middle"
         font-size="5"
-        fill="#edc726"
         style="cursor: pointer"
-      >
-        SCRUM Timer
-      </text>
+      ></text>
 
       <circle
         id="swatchAccent"
         cx="93.5"
         cy="5"
         r="3.5"
-        fill="#edc726"
         style="cursor: pointer"
       />
 
@@ -297,7 +293,6 @@
 
       <path
         id="path"
-        fill="#edc726"
         d="M 50 60 v -35 A 35 35 1 0 0 15.054756481091289 58.0447592615064 z"
       ></path>
       <circle id="centerpoint" cx="50" cy="60" r="2" fill="#000000"></circle>
@@ -317,7 +312,6 @@
         text-anchor="middle"
         alignment-baseline="middle"
         font-size="10"
-        fill="#edc726"
         style="cursor: pointer"
       >
         00:14:27
@@ -327,6 +321,12 @@
     <button id="startstop" class="go">Tick!</button>
 
     <script>
+      var DEFAULT_PRIMARY = "#0077b4";
+      var DEFAULT_ACCENT  = "#edc726";
+      var DEFAULT_TITLE   = "SCRUM Timer";
+
+      document.querySelector("#titleh1").textContent = DEFAULT_TITLE;
+
       document.addEventListener("touchmove", function (e) {
         e.preventDefault();
       });
@@ -540,8 +540,8 @@
           zIndex: "1000",
           background: "transparent",
           border: "none",
-          borderBottom: "2px solid #edc726",
-          color: "#edc726",
+          borderBottom: "2px solid " + DEFAULT_ACCENT,
+          color: DEFAULT_ACCENT,
           fontFamily: "Helvetica, sans-serif",
           fontWeight: "bold",
           textAlign: "center",
@@ -606,8 +606,8 @@
           zIndex: "1000",
           background: "transparent",
           border: "none",
-          borderBottom: "2px solid #edc726",
-          color: "#edc726",
+          borderBottom: "2px solid " + DEFAULT_ACCENT,
+          color: DEFAULT_ACCENT,
           fontFamily: "Helvetica, sans-serif",
           fontWeight: "bold",
           textAlign: "center",
@@ -674,9 +674,6 @@
 
       // ------------------ Color Pickers ------------------
       (function () {
-        var styleTag = document.createElement("style");
-        document.head.appendChild(styleTag);
-
         // Hidden color inputs
         function makeHiddenInput(id, value) {
           var el = document.createElement("input");
@@ -693,27 +690,12 @@
           document.body.appendChild(el);
           return el;
         }
-        var inputPrimary = makeHiddenInput("colorPrimary", "#0077b4");
-        var inputAccent = makeHiddenInput("colorAccent", "#edc726");
+        var inputPrimary = makeHiddenInput("colorPrimary", DEFAULT_PRIMARY);
+        var inputAccent  = makeHiddenInput("colorAccent",  DEFAULT_ACCENT);
 
         function applyColors(c1, c2) {
-          document.querySelector("#swatchPrimary").setAttribute("fill", c1);
-          document.querySelector("#swatchAccent").setAttribute("fill", c2);
-          document.querySelector("#path").setAttribute("fill", c2);
-          document.querySelector("#titleh1").setAttribute("fill", c2);
-          document.querySelector("#display").setAttribute("fill", c2);
-          document.querySelectorAll(".digit").forEach(function (el) {
-            el.style.color = c1;
-          });
-          styleTag.textContent =
-            "body:before { background: linear-gradient(to right, " +
-            c1 +
-            " 50%, " +
-            c2 +
-            " 50%) !important; }" +
-            "#startstop { background: " +
-            c1 +
-            " !important; }";
+          document.documentElement.style.setProperty("--c-primary", c1);
+          document.documentElement.style.setProperty("--c-accent",  c2);
         }
 
         function positionInput(input, swatch) {
@@ -727,12 +709,12 @@
         }
 
         var swatchPrimary = document.getElementById("swatchPrimary");
-        var swatchAccent = document.getElementById("swatchAccent");
+        var swatchAccent  = document.getElementById("swatchAccent");
 
         // Pre-position on load and on resize so first click is already correct
         function syncPositions() {
           positionInput(inputPrimary, swatchPrimary);
-          positionInput(inputAccent, swatchAccent);
+          positionInput(inputAccent,  swatchAccent);
         }
         syncPositions();
         window.addEventListener("resize", syncPositions);
