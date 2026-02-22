@@ -917,9 +917,13 @@
 
         // --- Toggle helpers ---
         var btn = document.getElementById("startstop");
+        var titleEl = document.getElementById("titleh1");
+        var savedTitle = null;
 
         function enterBomb() {
           bombActive = true;
+          savedTitle = titleEl.textContent.trim();
+          titleEl.textContent = "Who is the bomb?";
           document.body.classList.add("bomb-mode");
           btn.textContent = btn.getAttribute("class").match("stop") ? "Tock!" : "Tick!";
         }
@@ -927,6 +931,8 @@
         function exitBomb() {
           bombActive = false;
           document.body.classList.remove("bomb-mode", "booming");
+          titleEl.textContent = savedTitle !== null ? savedTitle : titleEl.textContent;
+          savedTitle = null;
           btn.textContent = btn.getAttribute("class").match("stop") ? "Wait for it!" : "Go for it!";
         }
 
