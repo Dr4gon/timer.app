@@ -330,7 +330,7 @@
       </text>
     </svg>
 
-    <button id="startstop" class="go">Tick!</button>
+    <button id="startstop" class="go">Go for it!</button>
 
     <script>
       var DEFAULT_PRIMARY = "#0077b4";
@@ -425,7 +425,7 @@
         var classNow = this.getAttribute("class");
         if (classNow.match("go")) {
           this.setAttribute("class", classNow.replace(/go/, "stop"));
-          this.textContent = "Tock!";
+          this.textContent = document.body.classList.contains("bomb-mode") ? "Tock!" : "Wait for it!";
           startValue = clock.getAttribute("data-time");
           if (startValue <= 1) {
             renderClock(60 * 15);
@@ -438,7 +438,7 @@
           startTimer();
         } else if (classNow.match("stop")) {
           this.setAttribute("class", classNow.replace(/stop/, "go"));
-          this.textContent = "Tick!";
+          this.textContent = document.body.classList.contains("bomb-mode") ? "Tick!" : "Go for it!";
           localStorage.removeItem("timerState");
           document.body.removeAttribute("class");
           stopTimer();
@@ -521,6 +521,7 @@
       };
 
       fireAlarm = function () {
+        var isBomb = document.body.classList.contains("bomb-mode");
         document.body.setAttribute("class", "alarming");
 
         try {
@@ -531,7 +532,7 @@
           console.log("Error while playing alarm", e);
         }
         startStop.setAttribute("class", "go");
-        startStop.textContent = "Tick!";
+        startStop.textContent = isBomb ? "Tick!" : "Go for it!";
         localStorage.removeItem("timerState");
         setTimeout(function () {
           document.body.removeAttribute("class");
@@ -771,7 +772,7 @@
           renderClock(val);
 
           startStop.setAttribute("class", "stop");
-          startStop.textContent = "Stop!";
+          startStop.textContent = "Wait for it!";
           startTimer();
         } catch (e) {
           stopTimer();
@@ -913,14 +914,18 @@
         svg.appendChild(boomG);
 
         // --- Toggle helpers ---
+        var btn = document.getElementById("startstop");
+
         function enterBomb() {
           bombActive = true;
           document.body.classList.add("bomb-mode");
+          btn.textContent = btn.getAttribute("class").match("stop") ? "Tock!" : "Tick!";
         }
 
         function exitBomb() {
           bombActive = false;
           document.body.classList.remove("bomb-mode", "booming");
+          btn.textContent = btn.getAttribute("class").match("stop") ? "Wait for it!" : "Go for it!";
         }
 
         // --- Wrap fireAlarm so BOOM triggers in bomb mode ---
