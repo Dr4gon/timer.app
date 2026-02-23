@@ -1,0 +1,13 @@
+{
+  "name": "timer.app",
+  "version": "0.1.0",
+  "main": "timer-app.html",
+  "scripts": {
+    "standalone": "node server.js"
+  },
+  "author": "De Long",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

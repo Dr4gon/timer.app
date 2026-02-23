@@ -25,6 +25,12 @@ You can do whatever you want. The idea is that this timer
 
 Download the `timer-app.html` in your desired folder and open it in your browser. Done and done.
 
+OR
+
+`docker build -f Dockerfile.production -t timer-app .`
+
+`docker run -p 3000:3000 timer-app`
+
 ## Configuration
 
 Place a file named `Alarm.mp3` in the same folder of the HTML and it will be played when timer hits 0. Remember to configure a feedback loop from your audio output to your input micro, so all participants are able to hear that sound.
