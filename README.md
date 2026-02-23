@@ -16,10 +16,11 @@ You can do whatever you want. The idea is that this timer
 
 - Is independent of any software
 - Can be used in the browser, i.e. if you only share one application window
-- Can be customized with colors, names, and branding ---> after the download (haven't had the time yet)
+- Can be customized with colors, names, and branding
 - Is simple and fun to use
 - Gives your participants a visual cue about the time left
-- Can provide your participants an auditory signal as well
+- Can provide your participants an auditory signal as well (share audio with wiht your meeting app)
+- Has an Easter Egg to make people laugh
 
 ## Setup
 
