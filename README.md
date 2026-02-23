@@ -27,7 +27,7 @@ Download the `timer-app.html` in your desired folder and open it in your browser
 
 OR
 
-`docker build -f Dockerfile.production -t timer-app .`
+`docker build -f Dockerfile -t timer-app .`
 
 `docker run -p 3000:3000 timer-app`
 
