@@ -8,7 +8,7 @@ P.P.S.: However I want to share this with the world and I'm responsible for any 
 
 ## Demo
 
-![A visual stunning beautiful majestic demo](demo.gif)
+Play with the live [demo](https://trainings-timer.de/) to figure out all the awesome features.
 
 ## Why should you use this?
 
